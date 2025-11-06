@@ -1,0 +1,68 @@
+/* 1. Tailwind Imports */
+/* In v4, we use a single @import */
+@import "tailwindcss";
+
+/* 2. Custom Theme Configuration (@theme) */
+/* This replaces the tailwind.config.js theme.extend */
+@theme {
+  /* --- CUSTOM COLORS --- */
+  --color-primary: #0F172A;     /* Dark Navy (Classy) */
+  --color-secondary: #6366F1;   /* Vibrant Blue/Purple (Stylish & Playful) */
+  --color-accent: #FDE047;      /* Sunny Yellow (Funny, Pop) */
+  --color-text-dark: #334155;   /* Slate Grey */
+  --color-bg-light: #F8FAFC;    /* Off-White background */
+  --color-highlight: #EC4899;   /* A fun, hot pink for emphasis */
+
+  /* --- CUSTOM FONTS --- */
+  /* This creates font-display and font-sans utility classes */
+  --font-sans: Montserrat, sans-serif;
+  --font-display: Poppins, sans-serif;
+
+  /* --- CUSTOM BORDER RADIUS (rounded-lg-fancy, etc.) --- */
+  --border-radius-lg-fancy: 1.5rem;
+  --border-radius-xl-fancy: 2.5rem;
+
+  /* --- CUSTOM BOX SHADOWS (shadow-fancy-sm, etc.) --- */
+  --box-shadow-fancy-sm: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --box-shadow-fancy-md: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* 3. Custom Keyframes & Animations (For 'wiggle' and 'float') */
+/* We define the raw keyframes and then create the utility classes with @utility */
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Create the utility classes for the animations */
+@utility animate-wiggle {
+  animation: wiggle 1s ease-in-out infinite;
+}
+@utility animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* 4. Base Layer Styles (Replaces base defaults) */
+@layer base {
+  body {
+    /* Apply custom theme variables */
+    @apply font-sans text-text-dark cursor-none;
+  }
+}
