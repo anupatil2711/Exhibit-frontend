@@ -27,7 +27,7 @@ function ExhibitsHub() {
             className="text-center mb-10 relative z-10 p-4 border-b-4 border-accent/50"
         >
             <h2 className="font-display text-5xl font-extrabold text-primary mb-2">
-                All Our Wonders! 🤩
+                All Our Exhibits! 🤩
             </h2>
             <p className="text-xl text-text-dark/80 max-w-2xl mx-auto">
                 Tap a card to dive into the science, take a quiz, or find a DIY project!

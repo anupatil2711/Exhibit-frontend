@@ -6,7 +6,9 @@ import StarCursor from './components/StarCursor'
 import Home from './pages/Home'
 import ExhibitsHub from './pages/ExhibitsHub'
 import ExhibitPage from './pages/ExhibitPage'
+import DiyDetailPage from './pages/DiyDetailPage';
 import DiyLab from './pages/DiyLab'
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
           {/* Route uses the simple string ID */}
           <Route path="/exhibits/:exhibitId" element={<ExhibitPage />} /> 
           <Route path="/diy-lab" element={<DiyLab />} />
+          <Route path="/diy-lab/:diyId" element={<DiyDetailPage />} />
         </Routes>
       </main>
       <Footer />

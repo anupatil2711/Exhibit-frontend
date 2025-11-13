@@ -1,91 +1,138 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FaRobot, FaVideo, FaTimes } from 'react-icons/fa';
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { FaRobot, FaTimes, FaPaperPlane } from "react-icons/fa";
 
-const Chatbot = ({ exhibitName, videoContent }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedAge, setSelectedAge] = useState(null);
-  const [videoLink, setVideoLink] = useState(null);
+const API_KEY = "AIzaSyAsndoGdHcrFdlQsoA-i1pghUT7gAzsrKU";
+const MODEL = "gemini-2.0-flash";
+const URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
-  const handleAgeSelect = (ageGroup) => {
-    setSelectedAge(ageGroup);
-    
-    // 1. Get the video array for the selected age group
-    const videos = videoContent[ageGroup];
+const Chatbot = () => {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: "assistant", text: "👋 Hey there! Ask me anything, I’m here to help!" },
+  ]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const chatEndRef = useRef(null);
 
-    if (videos && videos.length > 0) {
-      // 2. Select the first video URL
-      setVideoLink(videos[0]);
-    } else {
-      setVideoLink("No video available for this age group.");
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+    const userMsg = { role: "user", text: input };
+    setMessages((prev) => [...prev, userMsg]);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const response = await axios.post(
+        `${URL}?key=${API_KEY}`,
+        {
+          contents: [{ role: "user", parts: [{ text: input }] }],
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      const botResponse =
+        response.data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "⚠️ I couldn't generate a response. Please try again.";
+
+      setMessages((prev) => [...prev, { role: "assistant", text: botResponse }]);
+    } catch (err) {
+      console.error("Chatbot API Error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          text:
+            "⚠️ The chatbot service is temporarily unavailable. Please try again later.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
     }
   };
-  
-  const ageGroups = Object.keys(videoContent);
 
   return (
     <>
-      {/* Chatbot Toggle Button */}
+      {/* Chatbot Floating Icon */}
       <motion.button
-        className="fixed bottom-10 right-10 z-[100] bg-secondary text-white p-4 rounded-full shadow-xl hover:scale-105"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setOpen(!open)}
+        className="fixed bottom-6 right-6 bg-white border-2 border-dashed border-gray-400 text-gray-700 rounded-full w-14 h-14 shadow-md flex items-center justify-center hover:scale-105 transition-all z-50"
         whileTap={{ scale: 0.9 }}
-        transition={{ type: 'spring', stiffness: 400 }}
       >
-        <FaRobot size={24} />
+        {open ? <FaTimes size={22} /> : <FaRobot size={26} />}
       </motion.button>
 
-      {/* Chatbot Window */}
-      <motion.div
-        className="fixed bottom-28 right-5 w-80 bg-white rounded-lg-fancy shadow-2xl border-t-4 border-accent z-[100]"
-        initial={{ opacity: 0, y: 50, scale: 0.8 }}
-        animate={isOpen ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 50, scale: 0.8 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-      >
-        <div className="p-4 bg-primary text-white rounded-t-lg-fancy flex justify-between items-center">
-          <h3 className="font-display text-xl">Virtual Guide</h3>
-          <button onClick={() => setIsOpen(false)}><FaTimes /></button>
-        </div>
-
-        <div className="p-4">
-          <p className="text-text-dark/90 mb-4">
-            Hi! I can find the best video about **{exhibitName}** for you. How old is the scientist?
-          </p>
-
-          <div className="flex flex-wrap gap-2 mb-4">
-            {ageGroups.map((group) => (
-              <motion.button
-                key={group}
-                onClick={() => handleAgeSelect(group)}
-                className={`px-3 py-1 text-sm rounded-full font-semibold transition-colors ${
-                  selectedAge === group ? 'bg-secondary text-white' : 'bg-bg-light text-primary hover:bg-secondary/20'
-                }`}
-                whileTap={{ scale: 0.95 }}
-              >
-                {group}
-              </motion.button>
-            ))}
+      {/* Collapsible Chat Window */}
+      {open && (
+        <motion.div
+          initial={{ opacity: 0, y: 30, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 30 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          className="fixed bottom-24 right-6 w-80 max-h-[450px] bg-white border-2 border-dashed border-gray-400 rounded-2xl shadow-lg flex flex-col overflow-hidden z-50"
+        >
+          {/* Header */}
+          <div className="bg-gray-100 border-b border-gray-300 p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <FaRobot className="text-gray-600" />
+              <h3 className="font-semibold text-gray-700 text-sm">Virtual Guide</h3>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="text-gray-500 hover:text-gray-800"
+            >
+              <FaTimes />
+            </button>
           </div>
 
-          {videoLink && (
-            <div className="mt-4 p-3 border-l-4 border-highlight bg-yellow-50">
-              <p className="font-semibold text-sm mb-2">Result for Age {selectedAge}:</p>
-              {videoLink.startsWith("/") ? (
-                <a 
-                  href={videoLink} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-highlight hover:underline flex items-center gap-2"
-                >
-                  <FaVideo /> Watch Video Now!
-                </a>
-              ) : (
-                <p className="text-sm text-red-500">{videoLink}</p>
-              )}
-            </div>
-          )}
-        </div>
-      </motion.div>
+          {/* Messages Area */}
+          <div
+            className="flex-1 overflow-y-auto px-3 py-2 bg-white scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+            style={{ whiteSpace: "pre-wrap", overflowX: "hidden" }}
+          >
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`my-2 p-2 rounded-lg text-sm max-w-[85%] ${
+                  msg.role === "user"
+                    ? "bg-gray-800 text-white self-end ml-auto"
+                    : "bg-gray-100 text-gray-800 self-start"
+                }`}
+              >
+                {msg.text}
+              </div>
+            ))}
+            {loading && (
+              <p className="text-gray-500 text-xs italic">Thinking...</p>
+            )}
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Input Area */}
+          <div className="flex items-center border-t border-gray-300 p-2 bg-gray-50">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder="Ask me anything..."
+              className="flex-1 text-sm p-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-500"
+            />
+            <button
+              onClick={handleSend}
+              disabled={loading}
+              className="ml-2 bg-gray-800 text-white p-2 rounded-lg hover:bg-gray-700 transition-all"
+            >
+              <FaPaperPlane size={14} />
+            </button>
+          </div>
+        </motion.div>
+      )}
     </>
   );
 };

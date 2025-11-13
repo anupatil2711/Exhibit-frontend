@@ -1,9 +1,10 @@
-// src/api/api.js (Renamed and simplified)
+// src/api/api.js (Final Static Data Access)
 import { exhibitsData } from '../data/exhibits';
 import { quizzesData } from '../data/quizzes';
+import { diyActivitiesData } from '../data/diy'; // Assuming this imports the data object
 
 /**
- * Retrieves the list of all exhibits from local JSON.
+ * Retrieves the list of all exhibits from local data.
  */
 export const getExhibits = () => {
     return exhibitsData;
@@ -20,17 +21,23 @@ export const getExhibitById = (id) => {
  * Retrieves a quiz by its quiz_id.
  */
 export const getQuizById = (quizId) => {
-    // Return the quiz object directly from the JSON structure
+    // Return the quiz object directly from the data map
     return quizzesData[quizId];
 };
 
 /**
- * Retrieves mock DIY data (placeholder).
+ * Retrieves the list of all DIY projects.
+ * Returns an array of project objects suitable for the listing page.
  */
 export const getDiyProjects = () => {
-    return [
-        { id: 1, name: "Soda Bottle Rocket", image: "https://picsum.photos/id/350/600/400", description: "Build a simple pressure rocket." },
-        
-        { id: 2, name: "Potato Battery", image: "https://picsum.photos/id/349/600/400", description: "Generate electricity using a potato." }
-    ];
+    // Convert the data object (keyed by ID) into a simple array of projects
+    return Object.values(diyActivitiesData);
+};
+
+/**
+ * Retrieves a single DIY project by its ID.
+ */
+export const getDiyProjectById = (id) => {
+    // Direct lookup into the data object using the project ID
+    return diyActivitiesData[id];
 };

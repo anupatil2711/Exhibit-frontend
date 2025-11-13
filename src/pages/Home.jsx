@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useMotionValue } from 'framer-motion';
 import { getExhibits } from '../api/api';
 import { FaFlask, FaPuzzlePiece, FaTools } from 'react-icons/fa';
-import WackyWidget from '../components/WackyWidget';
+import BackgroundImageFile from '../assets/bg.webp'; 
 
 // --- DATA ARRAYS ---
 const instantFacts = [
@@ -85,87 +85,93 @@ function Home() {
       initial="hidden"
       animate="visible"
     >
-      {/* 1. QUIRKY HERO SECTION */}
-      <div className="relative bg-gradient-to-br from-primary to-secondary overflow-hidden pt-24 pb-40 md:py-40 text-white border-b-8 border-highlight">
+      {/* 1. ELEGANT HERO SECTION with Background Image */}
+      <div 
+        className="relative overflow-hidden pt-20 pb-40 md:py-40 text-white border-b-8 border-primary"
+        style={{
+            backgroundImage: `url(${BackgroundImageFile})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed',
+        }}
+      >
         
-        {/* --- WACKY WIDGETS PLACEMENT --- */}
-        <div className="absolute inset-0 z-0">
-          <WackyWidget typeIndex={0} mouseX={mouseX} mouseY={mouseY} style={{ top: '20%', left: '10%' }} />
-          <WackyWidget typeIndex={1} mouseX={mouseX} mouseY={mouseY} style={{ bottom: '30%', right: '5%' }} />
-          <WackyWidget typeIndex={2} mouseX={mouseX} mouseY={mouseY} style={{ top: '5%', right: '35%' }} />
-          <WackyWidget typeIndex={0} mouseX={mouseX} mouseY={mouseY} style={{ bottom: '10%', left: '25%' }} />
-          <WackyWidget typeIndex={1} mouseX={mouseX} mouseY={mouseY} style={{ top: '40%', right: '15%' }} />
-        </div>
+      {/* Dark overlay only on left side */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent z-10"></div>
 
-        {/* Hero Content */}
-        <div className="relative container mx-auto px-6 text-center z-10">
-          <motion.h1
-            className="font-display text-5xl md:text-7xl font-extrabold mb-4 leading-tight inline-block animate-wiggle"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            style={{ originX: 0.5, originY: 0.5 }}
-          >
-            {headlineWords.map((word, index) => (
-              <motion.span
-                key={index}
-                variants={{
-                  hidden: { opacity: 0, y: 50, rotate: 10 },
-                  visible: { opacity: 1, y: 0, rotate: 0, transition: { type: "spring", stiffness: 120 } },
-                }}
-                className="inline-block mx-1 bg-clip-text text-transparent bg-gradient-to-r from-accent to-highlight"
-              >
-                {word}
-                {index < headlineWords.length - 1 ? ' ' : ''}
-              </motion.span>
-            ))}
-          </motion.h1>
 
-          <motion.p
-            variants={itemVariants}
-            className="text-xl md:text-2xl text-white/90 mb-10 max-w-3xl mx-auto font-light"
-          >
-            Ready to learn something wild? We’ve swapped boring textbooks for explosions, static hair, and giant pendulum waves.
-          </motion.p>
-          
-          <motion.div variants={itemVariants}>
-            <Link
-              to="/exhibits"
-              className="inline-block bg-accent text-primary font-bold text-xl py-4 px-10 rounded-full shadow-lg-fancy relative overflow-hidden group border-2 border-accent"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Start Your Quest! 💥
-            </Link>
-          </motion.div>
-          
-          {/* Funnier Element: The Punch Me Button */}
-          <motion.div variants={itemVariants} className="mt-6">
-            <motion.button
-              onClick={() => alert("Ouch! That tickles! Go explore instead!")}
-              className="bg-highlight/80 text-white font-bold text-md py-2 px-6 rounded-lg-fancy shadow-md border-2 border-white/50"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.8, rotate: -5, backgroundColor: "#FF0000" }}
-              transition={{ type: "spring", stiffness: 300, damping: 10 }}
-            >
-              DON'T CLICK ME!
-            </motion.button>
-          </motion.div>
+        {/* Hero Content (Highest Z-index) */}
+        <div className="relative container mx-auto px-6 z-30"> 
+            <div className="max-w-xl text-left"> {/* Wrapper controls alignment and width */}
+                <motion.h1
+                    className="font-display text-5xl md:text-7xl font-extrabold mb-4 leading-tight inline-block"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    style={{ originX: 0.5, originY: 0.5 }}
+                >
+                    {headlineWords.map((word, index) => (
+                    <motion.span
+                        key={index}
+                        variants={{
+                        hidden: { opacity: 0, y: 50, rotate: 10 },
+                        visible: { opacity: 1, y: 0, rotate: 0, transition: { type: "spring", stiffness: 120 } },
+                        }}
+                        className="inline-block mx-1 text-white" 
+                    >
+                        {word}
+                        {index < headlineWords.length - 1 ? ' ' : ''}
+                    </motion.span>
+                    ))}
+                </motion.h1>
+
+                {/* --- Sub-headline --- */}
+                <motion.p
+                    variants={itemVariants}
+                    className="text-md md:text-xl text-white/90 mb-10 font-light"
+                >
+                    Welcome to a place where curiosity comes to play. 
+                    Explore, learn, and create in a world of hands-on wonders.
+                </motion.p>
+                
+                <motion.div variants={itemVariants}>
+                    {/* --- Button --- */}
+                    <Link
+                    to="/exhibits"
+                    className="inline-block bg-secondary text-white font-bold text-xl py-4 px-8 rounded-md shadow-lg relative overflow-hidden group border-2 border-secondary"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    >
+                    Begin Your Discovery! 🚀
+                    </Link>
+                </motion.div>
+                
+                {/* Funnier Element: The Punch Me Button
+                <motion.div variants={itemVariants} className="mt-6">
+                    <motion.button
+                    onClick={() => alert("Ouch! That tickles! Go explore instead!")}
+                    className="bg-accent/80 text-primary font-bold text-md py-2 px-6 rounded-lg-fancy shadow-md border-2 border-white/50"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    whileTap={{ scale: 0.8, rotate: -5, backgroundColor: "#FF0000" }}
+                    transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                    >
+                    DON'T CLICK ME!
+                    </motion.button>
+                </motion.div> */}
+            </div>
         </div>
       </div>
 
-      {/* 2. FUNKY SECTION DIVIDER */}
-      <div className="relative h-16 w-full -mt-16 transform -skew-y-3">
-        <div className="absolute inset-0 bg-bg-light shadow-xl shadow-highlight/40"></div>
-      </div>
+     
 
       {/* 3. "WHAT TO DO" ICON SECTION */}
       <div className="container mx-auto px-6 py-10 pt-20">
+        {/* --- "Lovely" and "Sensible" section title --- */}
         <motion.h2
           variants={itemVariants}
           className="font-display text-4xl font-bold text-primary text-center mb-12"
         >
-          Pick Your Poison (Just Kidding!)
+          Your Journey Starts Here ✨
         </motion.h2>
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center"
@@ -173,12 +179,12 @@ function Home() {
           initial="hidden"
           animate="visible"
         >
-          {/* Card 1: Explore */}
+          {/* Card 1: Explore - DOTTED BORDER */}
           <motion.div
             variants={itemVariants}
             whileHover={{ scale: 1.05, rotate: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white p-8 rounded-lg-fancy shadow-fancy-md transition-all transform flex flex-col items-center border-b-4 border-secondary/50 hover:border-b-8"
+            className="bg-white p-8 rounded-lg-fancy shadow-fancy-md transition-all transform flex flex-col items-center border-2 border-dashed border-secondary hover:shadow-fancy-md"
           >
             <motion.div
               className="bg-secondary/10 p-5 rounded-full mb-4"
@@ -188,20 +194,20 @@ function Home() {
               <FaFlask size={50} className="text-secondary" />
             </motion.div>
             <h3 className="font-display text-3xl font-bold text-primary mt-2 mb-2">
-              The Wild Exhibits
+              Explore Our Wonders
             </h3>
-            <p className="text-text-dark/90 text-lg">Prepare for mind-blows and weird facts!</p>
+            <p className="text-text-dark/90 text-lg">See all the mind-blowing exhibits.</p>
             <Link to="/exhibits" className="mt-4 text-highlight font-semibold hover:underline">
-              Go Now! &rarr;
+              See Exhibits &rarr;
             </Link>
           </motion.div>
 
-          {/* Card 2: Quiz */}
+          {/* Card 2: Quiz - DOTTED BORDER */}
           <motion.div
             variants={itemVariants}
             whileHover={{ scale: 1.05, rotate: 2 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white p-8 rounded-lg-fancy shadow-fancy-md transition-all transform flex flex-col items-center border-b-4 border-highlight/50 hover:border-b-8"
+            className="bg-white p-8 rounded-lg-fancy shadow-fancy-md transition-all transform flex flex-col items-center border-2 border-dashed border-highlight hover:shadow-fancy-md"
           >
             <motion.div
               className="bg-highlight/10 p-5 rounded-full mb-4"
@@ -211,20 +217,20 @@ function Home() {
               <FaPuzzlePiece size={50} className="text-highlight" />
             </motion.div>
             <h3 className="font-display text-3xl font-bold text-primary mt-2 mb-2">
-              Quiz Time! (Oof)
+              Test Your Knowledge
             </h3>
-            <p className="text-text-dark/90 text-lg">Test your newly acquired brain power!</p>
+            <p className="text-text-dark/90 text-lg">Take fun quizzes after you learn.</p>
             <Link to="/exhibits" className="mt-4 text-highlight font-semibold hover:underline">
-              Challenge Me! &rarr;
+              Take a Quiz &rarr;
             </Link>
           </motion.div>
 
-          {/* Card 3: Build */}
+          {/* Card 3: Build - DOTTED BORDER */}
           <motion.div
             variants={itemVariants}
             whileHover={{ scale: 1.05, rotate: -2 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white p-8 rounded-lg-fancy shadow-fancy-md transition-all transform flex flex-col items-center border-b-4 border-accent/50 hover:border-b-8"
+            className="bg-white p-8 rounded-lg-fancy shadow-fancy-md transition-all transform flex flex-col items-center border-2 border-dashed border-accent hover:shadow-fancy-md"
           >
             <motion.div
               className="bg-accent/10 p-5 rounded-full mb-4"
@@ -234,18 +240,18 @@ function Home() {
               <FaTools size={50} className="text-accent" />
             </motion.div>
             <h3 className="font-display text-3xl font-bold text-primary mt-2 mb-2">
-              Build Stuff! 🔨
+              Create & Build
             </h3>
-            <p className="text-text-dark/90 text-lg">Grab some tape and glue, let's go!</p>
+            <p className="text-text-dark/90 text-lg">Make your own amazing science projects.</p>
             <Link to="/diy-lab" className="mt-4 text-highlight font-semibold hover:underline">
-              Start Building! &rarr;
+              Find a Project &rarr;
             </Link>
           </motion.div>
         </motion.div>
       </div>
 
       {/* 4. INSTANT FACT MACHINE */}
-      <div className="bg-gradient-to-r from-secondary/10 to-primary/10 py-20 mt-10">
+      <div className="bg-linear-to-r from-secondary/10 to-primary/10 py-20 mt-10">
           <div className="container mx-auto px-6">
               <motion.h2
                   variants={itemVariants}

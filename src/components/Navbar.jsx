@@ -50,7 +50,7 @@ function Navbar() {
             >
               <NavLink
                 to="/diy-lab"
-                className="bg-highlight text-white font-bold py-2 px-6 rounded-full shadow-md text-lg"
+                className=" border-blue-950 border-2 text-black font-bold py-2 px-6 rounded-md shadow-md text-lg"
               >
                 DIY Lab!
               </NavLink>

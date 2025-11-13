@@ -58,18 +58,17 @@ function ExhibitPage() {
         variants={contentVariants} 
         initial="hidden" 
         animate="visible"
-        className="bg-white rounded-xl-fancy shadow-fancy-md overflow-hidden border-8 border-secondary/50 p-4 relative" // Added border-8 and inner padding
-      >
+        className="bg-white rounded-sm shadow-fancy-md overflow-hidden border-8 border-secondary/50 border-dashed p-4 relative" >
         
         {/* Main Exhibit Image and Info Wrapper */}
-        <div className="bg-bg-light rounded-lg-fancy overflow-hidden">
+        <div className=" rounded-lg overflow-hidden">
             <motion.img
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              src={exhibit.image} 
+              src={exhibit.cover} 
               alt={exhibit.name} 
-              className="w-full h-96 object-cover border-b-4 border-highlight" // Decorative border under image
+              className="w-full h-96 object-cover rounded-sm" // Decorative border under image
             />
         </div>
         
@@ -102,13 +101,13 @@ function ExhibitPage() {
                 </h3>
                 <ul className="list-none space-y-3">
                   {Object.keys(exhibit.video_content).map(ageGroup => (
-                    <li key={ageGroup} className="text-text-dark text-lg flex items-center justify-between bg-white p-2 rounded-full shadow-sm">
+                    <li key={ageGroup} className="text-text-dark text-lg flex items-center justify-between bg-white p-2 rounded-full border shadow-sm">
                       <span className="font-semibold text-primary">Age {ageGroup}</span>
                       <a 
                         href={exhibit.video_content[ageGroup][0]} 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="bg-secondary text-white py-1 px-4 rounded-full font-bold hover:bg-secondary/80 transition-colors"
+                        className="bg-secondary py-1 px-4 rounded-full font-bold hover:bg-secondary/80 transition-colors"
                       >
                         Watch Now!
                       </a>
